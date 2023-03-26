@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Video en vivo</title>
+	<style>
+		#video {
+			max-width: 100%;
+			height: auto;
+		}
+	</style>
+</head>
+<body>
+	<h1>Video en vivo</h1>
+	<video id="video" autoplay></video>
+	<br>
+	<button id="capturar">Capturar imagen</button>
+	<script>
+		var video = document.getElementById("video");
+		var canvas = document.createElement("canvas");
+		canvas.width = 640; // Ancho de la imagen
+		canvas.height = 480; // Alto de la imagen
+		var capturar = document.getElementById("capturar");
+		capturar.onclick = function() {
+			var context = canvas.getContext("2d");
+			context.drawImage(video, 0, 0, canvas.width, canvas.height);
+			var dataURL = canvas.toDataURL("image/jpeg");
+			var link = document.createElement("a");
+			link.download = "imagen.jpg";
+			link.href = dataURL;
+			link.click();
+		};
+		navigator.mediaDevices.getUserMedia({ video: true })
+			.then(function(stream) {
+				video.srcObject = stream;
+			})
+			.catch(function(error) {
+				console.log("Error al acceder a la cámara: " + error.message);
+			});
+	</script>
+</body>
+</html>
